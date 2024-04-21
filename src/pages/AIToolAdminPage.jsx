@@ -428,7 +428,7 @@ function AIToolAdminPage() {
                 }
 
                 <Row xs={1} xl={2} className='mb-3'>
-                    {data.content?.map((ob, idx) => (
+                    {data?.content?.map((ob, idx) => (
                         <Col key={idx} className='mb-2'>
                             <Accordion>
                                 <Card>

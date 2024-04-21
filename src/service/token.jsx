@@ -1,3 +1,3 @@
-const token = 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhbGlib3VAbWFpbC5jb20iLCJpYXQiOjE3MDczMzc4ODMsImV4cCI6MTcwNzM1NTg4M30.NYmk1eruHfSVIHRaaxjVVFiqlBOawhMevcZ12Es2WsQ';
+const token = '';
 
 export default token;

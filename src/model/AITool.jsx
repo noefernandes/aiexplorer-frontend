@@ -9,6 +9,8 @@ let AITool = {
     discordUrl: '',
     linkedinUrl: '',
     githubUrl: '',
+    createdAt: '12-10-1989',
+    updatedAt: '12-10-1989',
 }
 
 export default AITool;
