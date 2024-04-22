@@ -336,13 +336,13 @@ function AIToolAdminPage() {
 
     const fillPage = async (page = 0) => {
         try {
-            /* const res = await api.get(`api/v1/aitool?page=${page}&size=${size}`, {
+            /* const res = await api.get(`api/v1/aitools?page=${page}&size=${size}`, {
                 headers: {
                     Authorization: token
                 }
             }); */
 
-            const res = await api.get(`api/v1/aitool?page=${page}&size=${size}`);
+            const res = await api.get(`api/v1/aitools?page=${page}&size=${size}`);
             setData(res.data)
         } catch (error) {
             console.log(error);
