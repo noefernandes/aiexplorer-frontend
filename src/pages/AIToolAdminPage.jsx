@@ -46,8 +46,8 @@ function ModalTool(props) {
                                 <Form.Control className=''
                                     type="text"
                                     placeholder="Link do Site"
-                                    name='siteUrl'
-                                    value={props.aitool.siteUrl}
+                                    name='site_url'
+                                    value={props.aitool.site_url}
                                     onChange={props.onChange}
                                 />
                             </Col>
@@ -57,8 +57,8 @@ function ModalTool(props) {
                             <Form.Control className=''
                                 type="text"
                                 placeholder="Descrição Curta"
-                                name='shortDescription'
-                                value={props.aitool.shortDescription}
+                                name='short_description'
+                                value={props.aitool.short_description}
                                 onChange={props.onChange}
                             />
                         </Col>
@@ -73,19 +73,12 @@ function ModalTool(props) {
                                 onChange={props.onChange}
                             />
                         </Col>
-
-                        <MultiSelect
-                            setSelectedTags={props.setSelectedTags}
-                            options={props.options}
-                        />
-
                         <Col className='mb-3'>
-                            <Form.Control className=''
-                                type="text"
-                                placeholder="Link do Vídeo no Youtube"
-                                name='youtubeUrl'
-                                value={props.aitool.youtubeUrl}
-                                onChange={props.onChange}
+                            <MultiSelect
+                                aitool={props.aitool}
+                                setAitool={props.setAitool}
+                                setSelectedTags={props.setSelectedTags}
+                                options={props.options}
                             />
                         </Col>
 
@@ -93,8 +86,8 @@ function ModalTool(props) {
                             <Form.Control className=''
                                 type="text"
                                 placeholder="Link do Instagram"
-                                name='instagramUrl'
-                                value={props.aitool.instagramUrl}
+                                name='instagram_url'
+                                value={props.aitool.instagram_url}
                                 onChange={props.onChange}
                             />
                         </Col>
@@ -103,8 +96,8 @@ function ModalTool(props) {
                             <Form.Control className=''
                                 type="text"
                                 placeholder="Link do Discord"
-                                name='discordUrl'
-                                value={props.aitool.discordUrl}
+                                name='discord_url'
+                                value={props.aitool.discord_url}
                                 onChange={props.onChange}
                             />
                         </Col>
@@ -113,8 +106,8 @@ function ModalTool(props) {
                             <Form.Control className=''
                                 type="text"
                                 placeholder="Link do Linkedin"
-                                name='linkedinUrl'
-                                value={props.aitool.linkedinUrl}
+                                name='linkedin_url'
+                                value={props.aitool.linkedin_url}
                                 onChange={props.onChange}
                             />
                         </Col>
@@ -123,8 +116,8 @@ function ModalTool(props) {
                             <Form.Control className=''
                                 type="text"
                                 placeholder="Link do Github"
-                                name='githubUrl'
-                                value={props.aitool.githubUrl}
+                                name='github_url'
+                                value={props.aitool.github_url}
                                 onChange={props.onChange}
                             />
                         </Col>
@@ -254,26 +247,11 @@ function AIToolAdminPage() {
         return () => clearTimeout(timeout);
     }, [showSuccessAlert]);
 
-    const onFormSubmit = async (e, callback = () => console.log(aitool)) => {
+    const onFormSubmit = async (e) => {
         e.preventDefault();
 
-        //const dataForm = new FormData();
-        //dataForm.append('picture', picture);
-
-        setAitool({
-            ...aitool,
-            tags: selectedTags.map(tag => tag.value)
-        })
-
         try {
-            /* await api.post('/api/v1/aitool', aitool,
-                {
-                    headers: {
-                        Authorization: token
-                    }
-                }); */
             await api.post('/api/v1/aitool', aitool);
-
             onShowAlert();
             fillPage(page);
         } catch (error) {
@@ -285,13 +263,6 @@ function AIToolAdminPage() {
         e.preventDefault();
 
         try {
-            /* const res = await api.put('/api/v1/aitool', aitoolEdit,
-                {
-                    headers: {
-                        Authorization: token
-                    }
-                }); */
-
             const res = await api.put('/api/v1/aitool', aitoolEdit);
             onShowAlert();
             fillPage(page);
@@ -313,12 +284,6 @@ function AIToolAdminPage() {
         e.preventDefault();
 
         try {
-            /* const res = await api.delete('/api/v1/aitool', {
-                headers: {
-                    Authorization: token
-                },
-                data: aitoolToDelete
-            }); */
             const res = await api.delete('/api/v1/aitool', {
                 data: aitoolToDelete
             });
@@ -336,12 +301,6 @@ function AIToolAdminPage() {
 
     const fillPage = async (page = 0) => {
         try {
-            /* const res = await api.get(`api/v1/aitools?page=${page}&size=${size}`, {
-                headers: {
-                    Authorization: token
-                }
-            }); */
-
             const res = await api.get(`api/v1/aitools?page=${page}&size=${size}`);
             setData(res.data)
         } catch (error) {
@@ -351,13 +310,7 @@ function AIToolAdminPage() {
 
     const fetchTags = async () => {
         try {
-            /* const res = await api.get(`api/v1/tags`, {
-                headers: {
-                    Authorization: token
-                }
-            }); */
             const res = await api.get(`api/v1/tags`);
-
             setTags(res.data.map((tag) => ({ label: tag.name, value: tag })));
         } catch (error) {
             console.log(error);
@@ -397,6 +350,7 @@ function AIToolAdminPage() {
                     setSelectedTags={setSelectedTags}
                     onHide={() => setShowRegisterModal(false)}
                     aitool={aitool}
+                    setAitool={setAitool}
                     onFormSubmit={onFormSubmit}
                     onChange={handleChange}
                     setPicture={setPicture}
@@ -436,13 +390,13 @@ function AIToolAdminPage() {
                                         <Container className='p-0'>
                                             <Container className='mb-3'>
                                                 <Card.Img className='me-2 rounded-circle'
-                                                    src={ob.profilePicture ? `data:image/png;base64,${ob.profilePicture}` : image}
+                                                    src={ob.profile_picture ? `data:image/png;base64,${ob.profile_picture}` : image}
                                                     style={{ width: '70px', height: '70px' }}
                                                 />
                                                 <strong>{ob.name}</strong>
                                             </Container>
                                             <Container>
-                                                <p>{ob.shortDescription}</p>
+                                                <p>{ob.short_description}</p>
                                             </Container>
                                             <Stack style={{ fontSize: '1.1rem' }} direction="horizontal" gap={2}>
                                                 <Badge pill bg="primary" text="light">
@@ -479,12 +433,12 @@ function AIToolAdminPage() {
                                                 <Stack
                                                     style={{ fontSize: '1.4rem' }}
                                                     direction="horizontal" gap={3}>
-                                                    <a href={ob.instagramUrl} target='_blank'><Instagram color='#E1306C' /></a>
-                                                    <a href={ob.linkedinUrl} target='_blank'><Linkedin color='#0E76A8' /></a>
-                                                    <a href={ob.githubUrl} target='_blank'><Github color='black' /></a>
-                                                    <a href={ob.discordUrl} target='_blank'><Discord color='#7289da' /></a>
+                                                    <a href={ob.instagram_url} target='_blank'><Instagram color='#E1306C' /></a>
+                                                    <a href={ob.linkedin_url} target='_blank'><Linkedin color='#0E76A8' /></a>
+                                                    <a href={ob.github_url} target='_blank'><Github color='black' /></a>
+                                                    <a href={ob.discord_url} target='_blank'><Discord color='#7289da' /></a>
                                                 </Stack>
-                                                <a href={ob.siteUrl} target='_blank'>
+                                                <a href={ob.site_url} target='_blank'>
                                                     <Button variant='primary'>Visite</Button>
                                                 </a>
                                             </div>

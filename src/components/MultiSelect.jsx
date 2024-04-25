@@ -29,6 +29,10 @@ const MultiSelect = (props) => {
 
     const handleChange = (selectedOption) => {
         props.setSelectedTags(selectedOption);
+        props.setAitool({
+            ...props.aitool,
+            tags: selectedOption.map(tag => tag.value)
+        })
     };
 
     return <Select

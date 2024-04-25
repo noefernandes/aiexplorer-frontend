@@ -1,16 +1,15 @@
 let AITool = {
     name: '',
-    shortDescription: '',
+    short_description: '',
     description: '',
-    tags: [],
-    profilePicture: null,
-    siteUrl: '',
-    instagramUrl: '',
-    discordUrl: '',
-    linkedinUrl: '',
-    githubUrl: '',
-    createdAt: '12-10-1989',
-    updatedAt: '12-10-1989',
+    profile_picture: '',
+    site_url: '',
+    instagram_url: '',
+    discord_url: '',
+    linkedin_url: '',
+    github_url: '',
+    created_at: '',
+    updated_at: '',
 }
 
 export default AITool;
