@@ -311,7 +311,7 @@ function AIToolAdminPage() {
     const fetchTags = async () => {
         try {
             const res = await api.get(`api/v1/tags`);
-            setTags(res.data.map((tag) => ({ label: tag.name, value: tag })));
+            //setTags(res.data.map((tag) => ({ label: tag.name, value: tag })));
         } catch (error) {
             console.log(error);
         }
