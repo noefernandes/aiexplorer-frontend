@@ -4,6 +4,7 @@ let AITool = {
     description: '',
     profile_picture: '',
     site_url: '',
+    tags: [],
     instagram_url: '',
     discord_url: '',
     linkedin_url: '',

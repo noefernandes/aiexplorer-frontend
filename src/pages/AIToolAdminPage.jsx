@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import { ChevronDown, ChevronUp, Github, Linkedin, Discord, Instagram, ThreeDotsVertical, PlusSquareFill, SquareFill } from 'react-bootstrap-icons';
-import { Card, Dropdown, Modal, Accordion, useAccordionButton, Badge, Stack, Alert } from 'react-bootstrap';
+import { Card, Dropdown, Modal, Accordion, useAccordionButton, Stack, Alert } from 'react-bootstrap';
 import image from '../assets/download.jpg';
 import { useCallback, useEffect, useState } from 'react';
 import React from 'react';
@@ -17,6 +17,7 @@ import Form from 'react-bootstrap/Form';
 import Avatar from '../components/Avatar';
 import token from '../service/token';
 import MultiSelect from '../components/MultiSelect';
+import Badge from '../components/Badge';
 
 function ModalTool(props) {
 
@@ -78,6 +79,7 @@ function ModalTool(props) {
                                 aitool={props.aitool}
                                 setAitool={props.setAitool}
                                 setSelectedTags={props.setSelectedTags}
+                                selectedTags={props.selectedTags}
                                 options={props.options}
                             />
                         </Col>
@@ -311,7 +313,7 @@ function AIToolAdminPage() {
     const fetchTags = async () => {
         try {
             const res = await api.get(`api/v1/tags`);
-            //setTags(res.data.map((tag) => ({ label: tag.name, value: tag })));
+            setTags(res.data.map((tag) => ({ label: tag.name, value: tag })));
         } catch (error) {
             console.log(error);
         }
@@ -324,6 +326,7 @@ function AIToolAdminPage() {
 
     const fillAndShowEditModal = (aitool) => {
         setAitoolEdit(aitool);
+        setSelectedTags(aitool.tags.map((tag) => ({ label: tag.tag_name, value: tag })))
         setShowEditModal(true)
     }
 
@@ -347,6 +350,7 @@ function AIToolAdminPage() {
                 <ModalTool
                     show={showRegisterModal}
                     options={tags}
+                    selectedTags={selectedTags}
                     setSelectedTags={setSelectedTags}
                     onHide={() => setShowRegisterModal(false)}
                     aitool={aitool}
@@ -357,8 +361,12 @@ function AIToolAdminPage() {
                 />
                 <ModalTool
                     show={showEditModal}
+                    options={tags}
+                    selectedTags={selectedTags}
+                    setSelectedTags={setSelectedTags}
                     onHide={() => setShowEditModal(false)}
                     aitool={aitoolEdit}
+                    setAitool={setAitoolEdit}
                     onFormSubmit={onFormEditSubmit}
                     onChange={handleEditChange}
                     setPicture={setPicture}
@@ -398,17 +406,15 @@ function AIToolAdminPage() {
                                             <Container>
                                                 <p>{ob.short_description}</p>
                                             </Container>
-                                            <Stack style={{ fontSize: '1.1rem' }} direction="horizontal" gap={2}>
-                                                <Badge pill bg="primary" text="light">
-                                                    Primary
-                                                </Badge>
-                                                <Badge pill bg="secondary" text="light">
-                                                    Secondary
-                                                </Badge>
-                                                <Badge pill bg="success" text="light">
-                                                    Success
-                                                </Badge>
-                                            </Stack>
+                                            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                                {
+                                                    ob.tags?.map((tag, id) => (
+                                                        <Stack key={id} style={{ fontSize: '1.1rem' }} direction="horizontal" gap={2}>
+                                                            <Badge name={tag.tag_name} color={tag.color}>sdsdsd</Badge>
+                                                        </Stack>
+                                                    ))
+                                                }
+                                            </div>
 
                                         </Container>
                                         <div className='d-flex align-items-center'>
