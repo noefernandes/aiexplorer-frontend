@@ -326,7 +326,7 @@ function AIToolAdminPage() {
 
     const fillAndShowEditModal = (aitool) => {
         setAitoolEdit(aitool);
-        setSelectedTags(aitool.tags.map((tag) => ({ label: tag.tag_name, value: tag })))
+        setSelectedTags(aitool.tags.map((tag) => ({ label: tag.name, value: tag })))
         setShowEditModal(true)
     }
 
@@ -410,7 +410,7 @@ function AIToolAdminPage() {
                                                 {
                                                     ob.tags?.map((tag, id) => (
                                                         <Stack key={id} style={{ fontSize: '1.1rem' }} direction="horizontal" gap={2}>
-                                                            <Badge name={tag.tag_name} color={tag.color}>sdsdsd</Badge>
+                                                            <Badge name={tag.name} color={tag.color}>sdsdsd</Badge>
                                                         </Stack>
                                                     ))
                                                 }
