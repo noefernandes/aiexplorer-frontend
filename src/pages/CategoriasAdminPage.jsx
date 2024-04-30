@@ -95,12 +95,6 @@ function CategoriasAdminPage() {
         e.preventDefault();
 
         try {
-            /* await api.post('/api/v1/tag', tag,
-                {
-                    headers: {
-                        Authorization: token
-                    }
-                }) */
             await api.post('/api/v1/tag', tag)
 
             onShowAlert();
@@ -120,11 +114,6 @@ function CategoriasAdminPage() {
 
     const fillPage = async () => {
         try {
-            /* const res = await api.get(`api/v1/tags`, {
-                headers: {
-                    Authorization: token
-                }
-            }); */
             const res = await api.get(`api/v1/tags`);
             setData(res.data);
         } catch (error) {
@@ -151,7 +140,7 @@ function CategoriasAdminPage() {
                 </div>
 
                 <Row xs={1} xl={2} className='mb-3'>
-                    {data.map((ob, idx) => (
+                    {data.length > 0 & data.map((ob, idx) => (
                         <Col key={idx} className='mb-2'>
                             <Card>
                                 <Card.Body
@@ -167,6 +156,9 @@ function CategoriasAdminPage() {
                             </Card>
                         </Col>
                     ))}
+                    {
+                        data.length === 0 && <p>Nenhuma categoria encontrada</p>
+                    }
                 </Row>
             </Container>
             <ModalTag
