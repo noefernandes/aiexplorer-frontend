@@ -276,7 +276,7 @@ function AIToolAdminPage() {
         e.preventDefault();
 
         const form = e.currentTarget;
-        if (form.checkValidity() === false) {
+        if (form.checkValidity() === false || selectedTags.length === 0) {
             e.stopPropagation();
             setValidated(true);
             return
@@ -294,6 +294,13 @@ function AIToolAdminPage() {
 
     const onFormEditSubmit = async (e) => {
         e.preventDefault();
+
+        const form = e.currentTarget;
+        if (form.checkValidity() === false || selectedTags.length === 0) {
+            e.stopPropagation();
+            setValidated(true);
+            return
+        }
 
         try {
             const res = await api.put('/api/v1/aitool', aitoolEdit);
@@ -490,6 +497,9 @@ function AIToolAdminPage() {
                             </Accordion>
                         </Col>
                     ))}
+                    {
+                        data.content?.length === 0 && <p>Nenhuma ferramenta encontrada.</p>
+                    }
                 </Row>
 
             </Container >

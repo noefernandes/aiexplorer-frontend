@@ -140,7 +140,7 @@ function CategoriasAdminPage() {
                 </div>
 
                 <Row xs={1} xl={2} className='mb-3'>
-                    {data.length > 0 & data.map((ob, idx) => (
+                    {data?.map((ob, idx) => (
                         <Col key={idx} className='mb-2'>
                             <Card>
                                 <Card.Body
