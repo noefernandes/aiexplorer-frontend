@@ -27,107 +27,129 @@ function ModalTool(props) {
                 <Modal.Title>Cadastrar Ferramenta</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <Form id='formRegister' onSubmit={props.onFormSubmit}>
-                    <Form.Group className="mb-3" controlId="controlInput">
-                        <Col>
-                            <Avatar setPicture={props.setPicture} />
-                        </Col>
+                <Form noValidate validated={props.validated} id='formRegister'
+                    onSubmit={props.onFormSubmit}>
+                    <Col>
+                        <Avatar setPicture={props.setPicture} />
+                    </Col>
 
-                        <Row>
-                            <Col sm={12} md={4} className='mb-3'>
+                    <Row>
+                        <Form.Group as={Col} controlId="controlInput1">
+                            <Form.Label>Nome</Form.Label>
+                            <Form.Control className=''
+                                type="text"
+                                placeholder=""
+                                name='name'
+                                value={props.aitool.name}
+                                onChange={props.onChange}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group as={Col} controlId="controlInput2">
+                            <Col className='mb-3'>
+                                <Form.Label>Site oficial</Form.Label>
                                 <Form.Control className=''
                                     type="text"
-                                    placeholder="Nome da ferramenta"
-                                    name='name'
-                                    value={props.aitool.name}
-                                    onChange={props.onChange}
-                                />
-                            </Col>
-                            <Col sm={12} md={8} className='mb-3'>
-                                <Form.Control className=''
-                                    type="text"
-                                    placeholder="Link do Site"
+                                    placeholder=""
                                     name='site_url'
                                     value={props.aitool.site_url}
                                     onChange={props.onChange}
+                                    required
                                 />
                             </Col>
-                        </Row>
+                        </Form.Group>
+                    </Row>
 
-                        <Col className='mb-3'>
-                            <Form.Control className=''
-                                type="text"
-                                placeholder="Descrição Curta"
-                                name='short_description'
-                                value={props.aitool.short_description}
-                                onChange={props.onChange}
-                            />
-                        </Col>
+                    <Form.Group as={Col} controlId="controlInput2">
+                        <Form.Label>Descrição curta</Form.Label>
+                        <Form.Control className='mb-3'
+                            type="text"
+                            placeholder=""
+                            name='short_description'
+                            value={props.aitool.short_description}
+                            onChange={props.onChange}
+                            required
+                        />
+                    </Form.Group>
 
-                        <Col className='mb-3'>
-                            <Form.Control className=''
-                                as="textarea"
-                                rows={4}
-                                placeholder="Descrição Longa"
-                                name='description'
-                                value={props.aitool.description}
-                                onChange={props.onChange}
-                            />
-                        </Col>
-                        <Col className='mb-3'>
-                            <MultiSelect
-                                aitool={props.aitool}
-                                setAitool={props.setAitool}
-                                setSelectedTags={props.setSelectedTags}
-                                selectedTags={props.selectedTags}
-                                options={props.options}
-                            />
-                        </Col>
+                    <Form.Group as={Col} controlId="controlInput3">
+                        <Form.Label>Descrição longa</Form.Label>
+                        <Form.Control className='mb-3'
+                            as="textarea"
+                            rows={4}
+                            placeholder=""
+                            name='description'
+                            value={props.aitool.description}
+                            onChange={props.onChange}
+                            required
+                        />
+                    </Form.Group>
 
-                        <Col className='mb-3'>
-                            <Form.Control className=''
-                                type="text"
-                                placeholder="Link do Instagram"
-                                name='instagram_url'
-                                value={props.aitool.instagram_url}
-                                onChange={props.onChange}
-                            />
-                        </Col>
+                    <Form.Group as={Col} className='mb-3' controlId="controlInput4">
+                        <Form.Label>Categorias</Form.Label>
+                        <MultiSelect
+                            validated={props.validated}
+                            aitool={props.aitool}
+                            setAitool={props.setAitool}
+                            setSelectedTags={props.setSelectedTags}
+                            selectedTags={props.selectedTags}
+                            options={props.options}
+                            required
+                        />
+                        {props.selectedTags.length === 0 && (
+                            <p style={{ color: 'red', display: props.validated ? 'block' : 'none' }}>
+                                Por favor, selecione pelo menos uma opção.
+                            </p>
+                        )}
+                    </Form.Group>
 
-                        <Col className='mb-3'>
-                            <Form.Control className=''
-                                type="text"
-                                placeholder="Link do Discord"
-                                name='discord_url'
-                                value={props.aitool.discord_url}
-                                onChange={props.onChange}
-                            />
-                        </Col>
+                    <Form.Group as={Col} controlId="controlInput5">
+                        <Form.Label>Instagram</Form.Label>
+                        <Form.Control className='mb-3'
+                            type="text"
+                            placeholder=""
+                            name='instagram_url'
+                            value={props.aitool.instagram_url}
+                            onChange={props.onChange}
+                        />
+                    </Form.Group>
 
-                        <Col className='mb-3 flex-xl-row'>
-                            <Form.Control className=''
-                                type="text"
-                                placeholder="Link do Linkedin"
-                                name='linkedin_url'
-                                value={props.aitool.linkedin_url}
-                                onChange={props.onChange}
-                            />
-                        </Col>
+                    <Form.Group as={Col} controlId="controlInput6">
+                        <Form.Label>Discord</Form.Label>
+                        <Form.Control className='mb-3'
+                            type="text"
+                            placeholder=""
+                            name='discord_url'
+                            value={props.aitool.discord_url}
+                            onChange={props.onChange}
+                        />
+                    </Form.Group>
 
-                        <Col className='mb-3'>
-                            <Form.Control className=''
-                                type="text"
-                                placeholder="Link do Github"
-                                name='github_url'
-                                value={props.aitool.github_url}
-                                onChange={props.onChange}
-                            />
-                        </Col>
+                    <Form.Group as={Col} controlId="controlInput7">
+                        <Form.Label>Linkedin</Form.Label>
+                        <Form.Control className='mb-3'
+                            type="text"
+                            placeholder=""
+                            name='linkedin_url'
+                            value={props.aitool.linkedin_url}
+                            onChange={props.onChange}
+                        />
+                    </Form.Group>
+
+                    <Form.Group as={Col} controlId="controlInput8">
+                        <Form.Label>Github</Form.Label>
+                        <Form.Control className='mb-3'
+                            type="text"
+                            placeholder=""
+                            name='github_url'
+                            value={props.aitool.github_url}
+                            onChange={props.onChange}
+                        />
                     </Form.Group>
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary" type='submit' form='formRegister' onClick={props.onHide}>
+                <Button variant="primary" type='submit' form='formRegister'>
                     Cadastrar
                 </Button>
                 <Button variant="secondary" onClick={props.onHide}>
@@ -216,6 +238,7 @@ function AIToolAdminPage() {
     const [picture, setPicture] = useState();
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
+    const [validated, setValidated] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -252,10 +275,18 @@ function AIToolAdminPage() {
     const onFormSubmit = async (e) => {
         e.preventDefault();
 
+        const form = e.currentTarget;
+        if (form.checkValidity() === false) {
+            e.stopPropagation();
+            setValidated(true);
+            return
+        }
+
         try {
             await api.post('/api/v1/aitool', aitool);
             onShowAlert();
             fillPage(page);
+            setShowRegisterModal(false);
         } catch (error) {
             console.log(error);
         }
@@ -358,6 +389,8 @@ function AIToolAdminPage() {
                     onFormSubmit={onFormSubmit}
                     onChange={handleChange}
                     setPicture={setPicture}
+                    validated={validated}
+                    setValidated={setValidated}
                 />
                 <ModalTool
                     show={showEditModal}
@@ -370,6 +403,8 @@ function AIToolAdminPage() {
                     onFormSubmit={onFormEditSubmit}
                     onChange={handleEditChange}
                     setPicture={setPicture}
+                    validated={validated}
+                    setValidated={setValidated}
                 />
                 <ModalDeleteTool
                     show={showDeleteModal}
@@ -390,7 +425,7 @@ function AIToolAdminPage() {
                 }
 
                 <Row xs={1} xl={2} className='mb-3'>
-                    {data?.content?.map((ob, idx) => (
+                    {data?.content?.sort((a, b) => a.id - b.id).map((ob, idx) => (
                         <Col key={idx} className='mb-2'>
                             <Accordion>
                                 <Card>

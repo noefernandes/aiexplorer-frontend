@@ -5,48 +5,50 @@ import chroma from 'chroma-js';
 
 const animatedComponents = makeAnimated();
 
-const customStyles = {
-    option: (provided) => ({
-        ...provided,
-        borderBottom: 'black',
-        color: 'black',
-    }),
-    control: (styles, state) => ({
-        ...styles,
-        height: 'auto',
-        backgroundColor: state.isSelected ? state.data.value.color : '#FFF',
-        fontSize: 20,
-        textAlign: 'left',
-    }),
-    multiValue: (styles, state) => {
-        return ({
-            ...styles,
-            backgroundColor: state.data.value.color,
-            color: '#FFF',
-            height: 30
-        })
-    },
-    multiValueLabel: (styles) => ({
-        ...styles,
-        color: '#FFF',
-    }),
-    multiValueRemove: (styles, state) => {
-        const color = chroma(state.data.value.color);
-        return ({
-            ...styles,
-            color: '#FFF',
-            ':hover': {
-                backgroundColor: '#ff3045',
-                color: '#FFF',
-            },
-        })
-    }
-}
-
 const MultiSelect = (props) => {
 
+    const customStyles = {
+        option: (provided) => ({
+            ...provided,
+            borderBottom: 'black',
+            color: 'black',
+        }),
+        control: (styles, state) => ({
+            ...styles,
+            textAlign: 'left',
+            boxShadow: 'none',
+            borderColor: props.validated & props.selectedTags.length === 0 ? '#dc3545' : 'rgb(204, 204, 204)',
+            '&:hover': {
+                borderColor: props.validated & props.selectedTags.length === 0 ? '#dc3545' : 'rgb(204, 204, 204)',
+            },
+            '&:focus': {
+                borderColor: props.validated & props.selectedTags.length === 0 ? '#dc3545' : 'rgb(204, 204, 204)',
+            },
+        }),
+        multiValue: (styles, state) => {
+            return ({
+                ...styles,
+                backgroundColor: state.data.value.color,
+            })
+        },
+        multiValueLabel: (styles) => ({
+            ...styles,
+            color: '#FFF',
+        }),
+        multiValueRemove: (styles, state) => {
+            const color = chroma(state.data.value.color);
+            return ({
+                ...styles,
+                color: '#FFF',
+                ':hover': {
+                    backgroundColor: '#ff3045',
+                    color: '#FFF',
+                },
+            })
+        }
+    }
+
     const handleChange = (selectedOption) => {
-        console.log(selectedOption)
         props.setSelectedTags(selectedOption);
         props.setAitool({
             ...props.aitool,
@@ -61,7 +63,7 @@ const MultiSelect = (props) => {
         options={props.options}
         styles={customStyles}
         className="select"
-        placeholder='Tipo...'
+        placeholder=''
         onChange={(item) => handleChange(item)}
     />
 }
