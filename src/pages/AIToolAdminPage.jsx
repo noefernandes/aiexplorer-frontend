@@ -3,7 +3,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
-import { ChevronDown, ChevronUp, Github, Linkedin, Discord, Instagram, ThreeDotsVertical, PlusSquareFill, SquareFill } from 'react-bootstrap-icons';
+import { ChevronDown, ChevronUp, Github, Linkedin, Discord, Instagram, ThreeDotsVertical, PlusSquareFill, Heart, HeartFill } from 'react-bootstrap-icons';
 import { Card, Dropdown, Modal, Accordion, useAccordionButton, Stack, Alert } from 'react-bootstrap';
 import image from '../assets/download.jpg';
 import { useCallback, useEffect, useState } from 'react';
@@ -303,7 +303,7 @@ function AIToolAdminPage() {
         }
 
         try {
-            const res = await api.put('/api/v1/aitool', aitoolEdit);
+            const res = await api.patch('/api/v1/aitool', aitoolEdit);
             onShowAlert();
             fillPage(page);
         } catch (error) {
@@ -367,6 +367,30 @@ function AIToolAdminPage() {
         setSelectedTags(aitool.tags.map((tag) => ({ label: tag.name, value: tag })))
         setShowEditModal(true)
     }
+
+    const makeFavorite = async (aitool, idx) => {
+        const newData = data.content.map(item => {
+            if (item.id === aitool.id) {
+                console.log(item.id, aitool.id)
+                return { ...item, favorited: !item.favorited };
+            } else {
+                return item;
+            }
+        });
+        setData({
+            ...data,
+            content: newData
+        });
+
+        console.log(newData)
+
+        try {
+            const res = await api.patch('/api/v1/aitool', newData[idx]);
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
 
     return (
         <>
@@ -440,10 +464,19 @@ function AIToolAdminPage() {
                                         <Container className='p-0'>
                                             <Container className='mb-3'>
                                                 <Card.Img className='me-2 rounded-circle'
-                                                    src={ob.profile_picture ? `data:image/png;base64,${ob.profile_picture}` : image}
+                                                    //src={ob.profile_picture ? `data:image/png;base64,${ob.profile_picture}` : image}
+                                                    src={image}
                                                     style={{ width: '70px', height: '70px' }}
                                                 />
                                                 <strong>{ob.name}</strong>
+                                                <a className='position-absolute end-0 mt-3 me-3' onClick={() => makeFavorite(ob, idx)}>
+                                                    {
+                                                        ob.favorited ?
+                                                            <HeartFill className='ms-4' style={{ color: 'red' }} size={'1.5rem'} />
+                                                            :
+                                                            <Heart className='ms-4' style={{ color: 'grey' }} size={'1.5rem'} />
+                                                    }
+                                                </a>
                                             </Container>
                                             <Container>
                                                 <p>{ob.short_description}</p>
@@ -471,6 +504,7 @@ function AIToolAdminPage() {
                                                     <Dropdown.Item onClick={() => handleDelete(ob)}>Excluir</Dropdown.Item>
                                                 </Dropdown.Menu>
                                             </Dropdown>
+
                                         </div>
                                     </Card.Header>
                                     <Accordion.Collapse eventKey="0">

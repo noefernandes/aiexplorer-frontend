@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://aiexplorer-go.onrender.com',
+    baseURL: 'http://aiexplorer-go.onrender.com',
 })
 
 
