@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import { ChevronDown, ChevronUp, Github, Linkedin, Discord, Instagram, ThreeDotsVertical, PlusSquareFill, Heart, HeartFill } from 'react-bootstrap-icons';
-import { Card, Dropdown, Modal, Accordion, useAccordionButton, Stack, Alert } from 'react-bootstrap';
+import { Card, Dropdown, Modal, Accordion, useAccordionButton, Stack, Alert, Spinner } from 'react-bootstrap';
 import image from '../assets/download.jpg';
 import { useCallback, useEffect, useState } from 'react';
 import React from 'react';
@@ -15,7 +15,6 @@ import AiToolModel from '../model/AITool';
 import Header from '../components/Header';
 import Form from 'react-bootstrap/Form';
 import Avatar from '../components/Avatar';
-import token from '../service/token';
 import MultiSelect from '../components/MultiSelect';
 import Badge from '../components/Badge';
 
@@ -239,6 +238,7 @@ function AIToolAdminPage() {
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [validated, setValidated] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -349,12 +349,14 @@ function AIToolAdminPage() {
     }
 
     const fetchTags = async () => {
+        setLoading(true);
         try {
             const res = await api.get(`api/v1/tags`);
             setTags(res.data.map((tag) => ({ label: tag.name, value: tag })));
         } catch (error) {
             console.log(error);
         }
+        setLoading(false);
     }
 
     const onChangePage = useCallback(async (page) => {
@@ -455,82 +457,84 @@ function AIToolAdminPage() {
                     )
                 }
 
-                <Row xs={1} xl={2} className='mb-3'>
-                    {data?.content?.sort((a, b) => a.id - b.id).map((ob, idx) => (
-                        <Col key={idx} className='mb-2'>
-                            <Accordion>
-                                <Card>
-                                    <Card.Header className='d-flex justify-content-between'>
-                                        <Container className='p-0'>
-                                            <Container className='mb-3'>
-                                                <Card.Img className='me-2 rounded-circle'
-                                                    //src={ob.profile_picture ? `data:image/png;base64,${ob.profile_picture}` : image}
-                                                    src={image}
-                                                    style={{ width: '70px', height: '70px' }}
-                                                />
-                                                <strong>{ob.name}</strong>
-                                                <a className='position-absolute end-0 mt-3 me-3' onClick={() => makeFavorite(ob, idx)}>
+                <Row xs={1} xl={2} className='d-flex mb-3'>
+                    {loading ? <Spinner className='m-auto' animation="border" variant='primary' />
+                        :
+                        data?.content?.sort((a, b) => a.id - b.id).map((ob, idx) => (
+                            <Col key={idx} className='mb-2'>
+                                <Accordion>
+                                    <Card>
+                                        <Card.Header className='d-flex justify-content-between'>
+                                            <Container className='p-0'>
+                                                <Container className='mb-3'>
+                                                    <Card.Img className='me-2 rounded-circle'
+                                                        //src={ob.profile_picture ? `data:image/png;base64,${ob.profile_picture}` : image}
+                                                        src={image}
+                                                        style={{ width: '70px', height: '70px' }}
+                                                    />
+                                                    <strong>{ob.name}</strong>
+                                                    <a className='position-absolute end-0 mt-3 me-3' onClick={() => makeFavorite(ob, idx)}>
+                                                        {
+                                                            ob.favorited ?
+                                                                <HeartFill className='ms-4' style={{ color: 'red' }} size={'1.5rem'} />
+                                                                :
+                                                                <Heart className='ms-4' style={{ color: 'grey' }} size={'1.5rem'} />
+                                                        }
+                                                    </a>
+                                                </Container>
+                                                <Container>
+                                                    <p>{ob.short_description}</p>
+                                                </Container>
+                                                <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                                     {
-                                                        ob.favorited ?
-                                                            <HeartFill className='ms-4' style={{ color: 'red' }} size={'1.5rem'} />
-                                                            :
-                                                            <Heart className='ms-4' style={{ color: 'grey' }} size={'1.5rem'} />
+                                                        ob.tags?.map((tag, id) => (
+                                                            <Stack key={id} style={{ fontSize: '1.1rem' }} direction="horizontal" gap={2}>
+                                                                <Badge name={tag.name} color={tag.color}>sdsdsd</Badge>
+                                                            </Stack>
+                                                        ))
                                                     }
-                                                </a>
+                                                </div>
+
                                             </Container>
-                                            <Container>
-                                                <p>{ob.short_description}</p>
-                                            </Container>
-                                            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                                                {
-                                                    ob.tags?.map((tag, id) => (
-                                                        <Stack key={id} style={{ fontSize: '1.1rem' }} direction="horizontal" gap={2}>
-                                                            <Badge name={tag.name} color={tag.color}>sdsdsd</Badge>
-                                                        </Stack>
-                                                    ))
-                                                }
+                                            <div className='d-flex align-items-center'>
+                                                <CustomToggleAccordion eventKey="0">Click me!</CustomToggleAccordion>
+                                                <Dropdown className='ms-3'>
+                                                    <Dropdown.Toggle as={CustomToggle} id="dropdown-basic">
+                                                        <ThreeDotsVertical style={{ color: 'black' }} size={'1.5rem'} />
+                                                    </Dropdown.Toggle>
+
+                                                    <Dropdown.Menu>
+                                                        <Dropdown.Item onClick={() => { fillAndShowEditModal(ob) }} >Editar</Dropdown.Item>
+                                                        <Dropdown.Item onClick={() => handleDelete(ob)}>Excluir</Dropdown.Item>
+                                                    </Dropdown.Menu>
+                                                </Dropdown>
+
                                             </div>
+                                        </Card.Header>
+                                        <Accordion.Collapse eventKey="0">
+                                            <Card.Body>
+                                                {ob.description}<br />
 
-                                        </Container>
-                                        <div className='d-flex align-items-center'>
-                                            <CustomToggleAccordion eventKey="0">Click me!</CustomToggleAccordion>
-                                            <Dropdown className='ms-3'>
-                                                <Dropdown.Toggle as={CustomToggle} id="dropdown-basic">
-                                                    <ThreeDotsVertical style={{ color: 'black' }} size={'1.5rem'} />
-                                                </Dropdown.Toggle>
+                                                <div className='d-flex justify-content-between mt-5'>
+                                                    <Stack
+                                                        style={{ fontSize: '1.4rem' }}
+                                                        direction="horizontal" gap={3}>
+                                                        <a href={ob.instagram_url} target='_blank'><Instagram color='#E1306C' /></a>
+                                                        <a href={ob.linkedin_url} target='_blank'><Linkedin color='#0E76A8' /></a>
+                                                        <a href={ob.github_url} target='_blank'><Github color='black' /></a>
+                                                        <a href={ob.discord_url} target='_blank'><Discord color='#7289da' /></a>
+                                                    </Stack>
+                                                    <a href={ob.site_url} target='_blank'>
+                                                        <Button variant='primary'>Visite</Button>
+                                                    </a>
+                                                </div>
 
-                                                <Dropdown.Menu>
-                                                    <Dropdown.Item onClick={() => { fillAndShowEditModal(ob) }} >Editar</Dropdown.Item>
-                                                    <Dropdown.Item onClick={() => handleDelete(ob)}>Excluir</Dropdown.Item>
-                                                </Dropdown.Menu>
-                                            </Dropdown>
-
-                                        </div>
-                                    </Card.Header>
-                                    <Accordion.Collapse eventKey="0">
-                                        <Card.Body>
-                                            {ob.description}<br />
-
-                                            <div className='d-flex justify-content-between mt-5'>
-                                                <Stack
-                                                    style={{ fontSize: '1.4rem' }}
-                                                    direction="horizontal" gap={3}>
-                                                    <a href={ob.instagram_url} target='_blank'><Instagram color='#E1306C' /></a>
-                                                    <a href={ob.linkedin_url} target='_blank'><Linkedin color='#0E76A8' /></a>
-                                                    <a href={ob.github_url} target='_blank'><Github color='black' /></a>
-                                                    <a href={ob.discord_url} target='_blank'><Discord color='#7289da' /></a>
-                                                </Stack>
-                                                <a href={ob.site_url} target='_blank'>
-                                                    <Button variant='primary'>Visite</Button>
-                                                </a>
-                                            </div>
-
-                                        </Card.Body>
-                                    </Accordion.Collapse>
-                                </Card>
-                            </Accordion>
-                        </Col>
-                    ))}
+                                            </Card.Body>
+                                        </Accordion.Collapse>
+                                    </Card>
+                                </Accordion>
+                            </Col>
+                        ))}
                     {
                         data.content?.length === 0 && <p>Nenhuma ferramenta encontrada.</p>
                     }

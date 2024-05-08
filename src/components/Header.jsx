@@ -62,6 +62,10 @@ function Header() {
         navigate('/');
     }
 
+    const goToFavoritos = () => {
+        navigate('/favoritos');
+    }
+
     return (
         <>
             <Navbar expand="lg" className="bg-body-tertiary">
@@ -72,7 +76,7 @@ function Header() {
                     </Navbar.Toggle>
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="#home">Meus Favoritos</Nav.Link>
+                            <Nav.Link onClick={goToFavoritos}>Meus Favoritos</Nav.Link>
                             <NavDropdown title="Administração" id="basic-nav-dropdown">
                                 <NavDropdown.Item href="#action/3.1">Newsletter</NavDropdown.Item>
                                 <NavDropdown.Item href="#action/3.2" onClick={goToCategorias}>

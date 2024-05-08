@@ -7,9 +7,9 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Alert from "react-bootstrap/Alert";
+import Spinner from 'react-bootstrap/Spinner';
 import { PlusSquareFill } from "react-bootstrap-icons";
 import { useState, useEffect } from "react";
-import token from "../service/token";
 import api from "../service/api";
 
 function ModalTag(props) {
@@ -65,6 +65,7 @@ function CategoriasAdminPage() {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
     const [data, setData] = useState([]);
     const [tag, setTag] = useState({ name: '', color: '#ffffff' });
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -113,12 +114,14 @@ function CategoriasAdminPage() {
     }, []);
 
     const fillPage = async () => {
+        setLoading(true);
         try {
             const res = await api.get(`api/v1/tags`);
             setData(res.data);
         } catch (error) {
             console.log(error);
         }
+        setLoading(false);
     }
 
     return (
@@ -139,25 +142,27 @@ function CategoriasAdminPage() {
                     </a>
                 </div>
 
-                <Row xs={1} xl={2} className='mb-3'>
-                    {data?.map((ob, idx) => (
-                        <Col key={idx} className='mb-2'>
-                            <Card>
-                                <Card.Body
-                                    className="d-flex align-items-center justify-content-between"
-                                >
-                                    <Card.Text className="mb-0">{ob.name}</Card.Text>
-                                    <Form.Control
-                                        type="color"
-                                        value={ob.color}
-                                        disabled
-                                    />
-                                </Card.Body>
-                            </Card>
-                        </Col>
-                    ))}
+                <Row xs={1} xl={2} className='d-flex mb-3'>
+                    {loading ? <Spinner className='m-auto' animation="border" variant="primary" />
+                        :
+                        data?.map((ob, idx) => (
+                            <Col key={idx} className='mb-2'>
+                                <Card>
+                                    <Card.Body
+                                        className="d-flex align-items-center justify-content-between"
+                                    >
+                                        <Card.Text className="mb-0">{ob.name}</Card.Text>
+                                        <Form.Control
+                                            type="color"
+                                            value={ob.color}
+                                            disabled
+                                        />
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        ))}
                     {
-                        data.length === 0 && <p>Nenhuma categoria encontrada</p>
+                        !data && <p>Nenhuma categoria encontrada</p>
                     }
                 </Row>
             </Container>
