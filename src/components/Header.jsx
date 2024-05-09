@@ -84,12 +84,14 @@ function Header() {
                                 </NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
+                        {/*
                         <Nav>
                             <Nav.Link href="#nada" onClick={() => handleModalShow(true)}>
                                 <PersonCircle className="me-2" size="35" />
                                 Login
                             </Nav.Link>
-                        </Nav>
+                        </Nav>    
+                        */}
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
