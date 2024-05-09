@@ -3,15 +3,38 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
-import { Github, Linkedin, Discord, Instagram, Heart, HeartFill } from 'react-bootstrap-icons';
+import { Github, Linkedin, Discord, Instagram, Heart, HeartFill, ChevronDown, ChevronUp } from 'react-bootstrap-icons';
 import Spinner from 'react-bootstrap/Spinner';
-import { Card, Accordion, Stack } from 'react-bootstrap';
+import { Card, Accordion, Stack, useAccordionButton } from 'react-bootstrap';
 import image from '../assets/download.jpg';
 import { useEffect, useState } from 'react';
 import React from 'react';
 import api from '../service/api';
 import Header from '../components/Header';
 import Badge from '../components/Badge';
+
+function CustomToggleAccordion({ children, eventKey }) {
+    const [expanded, setExpanded] = useState(false);
+
+    const decoratedOnClick = useAccordionButton(eventKey, () =>
+        setExpanded(!expanded)
+    );
+
+    return (
+        <button
+            type="button"
+            className='text-center border-0 bg-transparent'
+            onClick={decoratedOnClick}
+        >
+            {
+                expanded ?
+                    <ChevronUp style={{ fontSize: '1.5rem' }} />
+                    :
+                    <ChevronDown style={{ fontSize: '1.5rem' }} />
+            }
+        </button>
+    );
+}
 
 function FavoritosPage() {
     const [data, setData] = useState({});
@@ -32,11 +55,8 @@ function FavoritosPage() {
     const fillPage = async (page = 0) => {
 
         try {
-            const res = await api.get(`api/v1/aitools?page=${page}&size=${size}`);
-            setData({
-                ...res.data,
-                content: res.data.content.filter((aitool) => aitool.favorited === true)
-            });
+            const res = await api.get(`api/v1/aitools?page=${page}&size=${size}&favorities=true`);
+            setData(res.data);
         } catch (error) {
             console.log(error);
         }
@@ -138,6 +158,9 @@ function FavoritosPage() {
                                                 </div>
 
                                             </Container>
+                                            <div className='d-flex align-items-center'>
+                                                <CustomToggleAccordion eventKey="0">Click me!</CustomToggleAccordion>
+                                            </div>
                                         </Card.Header>
                                         <Accordion.Collapse eventKey="0">
                                             <Card.Body>

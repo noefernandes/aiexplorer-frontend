@@ -77,9 +77,9 @@ function Header() {
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link onClick={goToFavoritos}>Meus Favoritos</Nav.Link>
+                            <Nav.Link>Tarefas</Nav.Link>
                             <NavDropdown title="Administração" id="basic-nav-dropdown">
-                                <NavDropdown.Item href="#action/3.1">Newsletter</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2" onClick={goToCategorias}>
+                                <NavDropdown.Item onClick={goToCategorias}>
                                     Categorias
                                 </NavDropdown.Item>
                             </NavDropdown>
