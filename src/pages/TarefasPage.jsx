@@ -17,7 +17,6 @@ import Form from 'react-bootstrap/Form';
 import Avatar from '../components/Avatar';
 import MultiSelect from '../components/MultiSelect';
 import Badge from '../components/Badge';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 function ModalTool(props) {
 
@@ -30,7 +29,7 @@ function ModalTool(props) {
                 <Form noValidate validated={props.validated} id='formRegister'
                     onSubmit={props.onFormSubmit}>
                     <Col>
-                        <Avatar picture={props.aitool.profile_picture} setPicture={props.setPicture} />
+                        <Avatar setPicture={props.setPicture} />
                     </Col>
 
                     <Row>
@@ -235,13 +234,11 @@ function AIToolAdminPage() {
     const [aitool, setAitool] = useState(AiToolModel);
     const [aitoolEdit, setAitoolEdit] = useState(AiToolModel);
     const [aitoolToDelete, setAitoolToDelete] = useState({});
-    const [picture, setPicture] = useState(null);
+    const [picture, setPicture] = useState();
     const [tags, setTags] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [validated, setValidated] = useState(false);
     const [loading, setLoading] = useState(false);
-
-    const supabase = useSupabaseClient();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -249,8 +246,6 @@ function AIToolAdminPage() {
             ...aitool,
             [name]: value,
         });
-
-        console.log(aitool)
     };
 
     const handleEditChange = (e) => {
@@ -288,11 +283,7 @@ function AIToolAdminPage() {
         }
 
         try {
-            api.post('/api/v1/aitool', aitool).then(async (res) => {
-                await supabase.storage
-                    .from('aiexplorer-bucket-7854')
-                    .upload(`${res.data.id}/profile_picture.${picture.type.split('/')[1]}`, picture);
-            })
+            await api.post('/api/v1/aitool', aitool);
             onShowAlert();
             fillPage(page);
             setShowRegisterModal(false);
@@ -312,15 +303,8 @@ function AIToolAdminPage() {
         }
 
         try {
-            const res = await api.patch('/api/v1/aitool', aitoolEdit).then(async (res) => {
-                await supabase.storage
-                    .from('aiexplorer-bucket-7854')
-                    .upload(`${res.data.id}/profile_picture.${picture.type.split('/')[1]}`, picture,
-                        { upsert: true }
-                    );
-            })
+            const res = await api.patch('/api/v1/aitool', aitoolEdit);
             onShowAlert();
-            setShowEditModal(false);
             fillPage(page);
         } catch (error) {
             console.log(error);
@@ -358,30 +342,7 @@ function AIToolAdminPage() {
     const fillPage = async (page = 0) => {
         try {
             const res = await api.get(`api/v1/aitools?page=${page}&size=${size}`);
-            setData(res.data);
-
-            const promises = res.data.content.map(async (aitool) => {
-
-                const value = await supabase
-                    .storage
-                    .from('aiexplorer-bucket-7854')
-                    .list(`${aitool.id}/`);
-
-                if (value.data.length > 0) {
-                    const url = supabase.storage
-                        .from('aiexplorer-bucket-7854')
-                        .getPublicUrl(`${aitool.id}/profile_picture.png`);
-                    return {
-                        ...aitool,
-                        profile_picture: url.data.publicUrl
-                    }
-                }
-
-                return aitool
-            })
-
-            const newData = await Promise.all(promises);
-            setData({ ...data, content: newData, totalPages: res.data.totalPages });
+            setData(res.data)
         } catch (error) {
             console.log(error);
         }
@@ -412,6 +373,7 @@ function AIToolAdminPage() {
     const makeFavorite = async (aitool, idx) => {
         const newData = data.content.map(item => {
             if (item.id === aitool.id) {
+                console.log(item.id, aitool.id)
                 return { ...item, favorited: !item.favorited };
             } else {
                 return item;
@@ -428,6 +390,7 @@ function AIToolAdminPage() {
             console.log(error)
         }
     };
+
 
     return (
         <>
@@ -502,22 +465,10 @@ function AIToolAdminPage() {
                                         <Card.Header className='d-flex justify-content-between'>
                                             <Container className='p-0'>
                                                 <Container className='mb-3'>
-                                                    <Card.Img className='me-2 rounded-circle'
-                                                        src={ob.profile_picture || image}
-                                                        style={{ width: '70px', height: '70px' }}
-                                                    />
                                                     <strong>{ob.name}</strong>
-                                                    <a className='position-absolute end-0 mt-3 me-3' onClick={() => makeFavorite(ob, idx)}>
-                                                        {
-                                                            ob.favorited ?
-                                                                <HeartFill className='ms-4' style={{ color: 'red' }} size={'1.5rem'} />
-                                                                :
-                                                                <Heart className='ms-4' style={{ color: 'grey' }} size={'1.5rem'} />
-                                                        }
-                                                    </a>
                                                 </Container>
                                                 <Container>
-                                                    <p>{ob.short_description}</p>
+                                                    <p>{ob.description}</p>
                                                 </Container>
                                                 <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                                     {
@@ -553,14 +504,8 @@ function AIToolAdminPage() {
                                                     <Stack
                                                         style={{ fontSize: '1.4rem' }}
                                                         direction="horizontal" gap={3}>
-                                                        <a href={ob.instagram_url} target='_blank'><Instagram color='#E1306C' /></a>
-                                                        <a href={ob.linkedin_url} target='_blank'><Linkedin color='#0E76A8' /></a>
-                                                        <a href={ob.github_url} target='_blank'><Github color='black' /></a>
-                                                        <a href={ob.discord_url} target='_blank'><Discord color='#7289da' /></a>
+
                                                     </Stack>
-                                                    <a href={ob.site_url} target='_blank'>
-                                                        <Button variant='primary'>Visite</Button>
-                                                    </a>
                                                 </div>
 
                                             </Card.Body>

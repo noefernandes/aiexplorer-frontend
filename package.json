@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/auth-helpers-react": "^0.5.0",
+    "@supabase/supabase-js": "^2.43.2",
     "axios": "^1.6.5",
     "bootstrap": "^5.3.2",
     "chroma-js": "^2.4.2",
@@ -19,8 +21,7 @@
     "react-bootstrap-icons": "^1.10.3",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3",
-    "react-select": "^5.8.0",
-    "styled-components": "^6.1.8"
+    "react-select": "^5.8.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

@@ -10,10 +10,12 @@ const CropperModal = ({ src, showModal, setShowModal, setPreview, setPicture }) 
     //handle save
     const handleSave = async () => {
         if (cropRef) {
+            cropRef.current.getImage().toBlob((blob) => {
+                setPicture(blob);
+            })
             const dataUrl = cropRef.current.getImage().toDataURL();
             const result = await fetch(dataUrl);
             const blob = await result.blob();
-            setPicture(blob);
             setPreview(URL.createObjectURL(blob));
             setShowModal(false);
         }
@@ -75,7 +77,6 @@ function Avatar(props) {
         e.preventDefault();
         inputRef.current.click();
     };
-    // handle Change
 
     const handleImgChange = (e) => {
         setSrc(URL.createObjectURL(e.target.files[0]));
@@ -94,7 +95,7 @@ function Avatar(props) {
             <div style={{ cursor: 'pointer' }}>
                 <input
                     type="file"
-                    accept="image/*"
+                    accept="image/png"
                     ref={inputRef}
                     style={{ display: 'none' }}
                     onChange={handleImgChange}
@@ -103,7 +104,7 @@ function Avatar(props) {
             <div onClick={handleInputClick} className="mb-3" style={{ width: '100px', height: '100px' }}>
                 <Image
                     src={
-                        preview ||
+                        preview || props.picture ||
                         'https://www.signivis.com/img/custom/avatars/member-avatar-01.png'
                     }
                     style={{ border: '1px solid black' }}
